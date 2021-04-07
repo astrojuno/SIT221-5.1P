@@ -130,17 +130,31 @@ namespace DoublyLinkedList
         // TODO: Your task is to implement all the remaining methods.
         // Read the instruction carefully, study the code examples from above as they should help you to write the rest of the code.
 
+        /// <summary>Returns the node (casted to INode<T>) before the specified node in the list</summary>
+        /// <param><c>INode<T></c> the node after the node you want returned</param>
+        /// <returns><c>INode<T></c> the code before the node paramater</returns>
+        /// <exception cref = "NullReferenceException"> thrown when the parameter node is null</exception>
+        /// <exception cref = "InvalidOperationException"> thrown when the parameter node is not in the list</exception>
         public INode<T> Before(INode<T> node)
         {
+            // if the node is null, throw exception
             if (node == null) throw new NullReferenceException();
+            // get the node as a node (not INode)
             Node<T> node_current = node as Node<T>;
+            // if the list doesn't contain the node, throw exception
             if (node_current.Previous == null || node_current.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
+            // if the previous node is the head, return null
             if (node_current.Previous.Equals(Head)) return null;
+            // otherwise, return the previous node
             else return node_current.Previous;
         }
 
+        /// <summary>Adds a new node at the beginning of the list with the value given</summary>
+        /// <param><c>T</c> the value to be the payload of the new node</param>
+        /// <returns><c>Inode<T></c> the new node that has been added, cast as INode<T></returns>
         public INode<T> AddFirst(T value)
         {
+            // hand the work off to AddBetween, with the head as the previous
             return AddBetween(value, Head, Head.Next);
         }
 
