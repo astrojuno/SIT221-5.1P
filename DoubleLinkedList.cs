@@ -158,25 +158,51 @@ namespace DoublyLinkedList
             return AddBetween(value, Head, Head.Next);
         }
 
+        /// <summary>Adds a new node before the specified node in the linked list</summary>
+        /// <param><c>Inode<T><c> the node to insert before</param>
+        /// <param><c>T</c> the value that is to be the payload of the new node</param>
+        /// <returns><c>Inode<T></c> the new node that has been added, cast as INode<T></returns>
+        /// <exception cref = "NullReferenceException"> thrown when the parameter node is null</exception>
+        /// <exception cref = "InvalidOperationException"> thrown when the parameter node is not in the list</exception>
         public INode<T> AddBefore(INode<T> before, T value)
         {
+            // if the passed node is null, throw exception
             if (before == null) throw new NullReferenceException();
+            // get the node as a node (not INode)
             Node<T> add_before_me = before as Node<T>;
+            // if the list doesn't contain the node, throw exception
             if (add_before_me.Previous == null || add_before_me.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
+            // get the node before the new node
             Node<T> node_before = add_before_me.Previous;
+            // make the new
             Node<T> new_node = new Node<T>(value, node_before, add_before_me);
+            // wire up the new node to its place in the list
             node_before.Next = new_node;
             add_before_me.Previous = new_node;
+            // keep track of count
             Count++;
+            
+            // return the new node
             return new_node;
         }
 
+        /// <summary>Adds a new node after the specified node in the linked list</summary>
+        /// <param><c>Inode<T><c> the node to insert after</param>
+        /// <param><c>T</c> the value that is to be the payload of the new node</param>
+        /// <returns><c>Inode<T></c> the new node that has been added, cast as INode<T></returns>
+        /// <exception cref = "NullReferenceException"> thrown when the parameter node is null</exception>
+        /// <exception cref = "InvalidOperationException"> thrown when the parameter node is not in the list</exception>
         public INode<T> AddAfter(INode<T> after, T value)
         {
+            // if the passed node is null, throw exception
             if (after == null) throw new NullReferenceException();
+            // get the node as a node (not INode)
             Node<T> add_after_me = after as Node<T>;
+            // if the list doesn't contain the node, throw exception
             if (add_after_me.Previous == null || add_after_me.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
+            // get the node before the new node
             Node<T> node_after = add_after_me.Next;
+            
             Node<T> new_node = new Node<T>(value, add_after_me, node_after);
             add_after_me.Next = new_node;
             node_after.Previous = new_node;
