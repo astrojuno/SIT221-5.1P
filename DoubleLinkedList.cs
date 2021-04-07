@@ -174,7 +174,7 @@ namespace DoublyLinkedList
             if (add_before_me.Previous == null || add_before_me.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
             // get the node before the new node
             Node<T> node_before = add_before_me.Previous;
-            // make the new
+            // make the new node
             Node<T> new_node = new Node<T>(value, node_before, add_before_me);
             // wire up the new node to its place in the list
             node_before.Next = new_node;
@@ -200,20 +200,30 @@ namespace DoublyLinkedList
             Node<T> add_after_me = after as Node<T>;
             // if the list doesn't contain the node, throw exception
             if (add_after_me.Previous == null || add_after_me.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
-            // get the node before the new node
+            // get the node after the new node
             Node<T> node_after = add_after_me.Next;
-            
+            // make the new node
             Node<T> new_node = new Node<T>(value, add_after_me, node_after);
+            // wire up the new node to its place in the list
             add_after_me.Next = new_node;
             node_after.Previous = new_node;
+            // keep track of count
             Count++;
+
+            // return the new node
             return new_node;
         }
 
+        /// <summary>Clears the array of all elements, resets the count to zero</summary>
         public void Clear()
         {
+            // if the list is already empty, return
+            if (Count == 0) return;
+            // start at the first node
             Node<T> node = Head.Next;
+            // temporary node for holding the next node
             Node<T> next_node;
+            // loop through all nodes until the tail, setting pointers to null, and moving on
             while (node.Next != Tail) {
                 node.Previous = null;
                 next_node = node.Next;
@@ -221,32 +231,53 @@ namespace DoublyLinkedList
                 node = next_node; 
             }
 
+            // link the head and tail (empty list)
             Head.Next = Tail;
             Tail.Previous = Head;
+            // reset count
             Count = 0;
         }
 
+        /// <summary>Removes the specified node from the list</summary>
+        /// <param><c>INode<T></c> the node to remove</param>
         public void Remove(INode<T> node)
         {
+            // if the list doesn't contain the node, throw exception
             if (node == null) throw new NullReferenceException();
+            // get the node as a node (not INode)
             Node<T> node_current = node as Node<T>;
+            // if the list doesn't contain the node, throw exception
             if (node_current.Previous == null || node_current.Next == null) throw new InvalidOperationException("The node referred as 'before' is no longer in the list");
+            // wire up the next and previous node together
             node_current.Previous.Next = node_current.Next;
             node_current.Next.Previous = node_current.Previous;
+            // set the node to delete pointers to null
             node_current.Previous = null;
             node_current.Next = null;
+            // update the count
             Count--;
         }
 
+        /// <summary>Removes the first element in the list</summary>
+        /// <exception cref = "InvalidOperationException"> thrown when attempting to remove first on
+        ///     an empty list</exception>
         public void RemoveFirst()
         {
+            // if the array is empty, throw the exception
+            if (Count == 0) throw new InvalidOperationException();
+            // otherwise, remove the first node
             Remove(Head.Next);
         }
 
+        /// <summary>Removes the last element in the list</summary>
+        /// <exception cref = "InvalidOperationException"> thrown when attempting to remove last on
+        ///     an empty list</exception>
         public void RemoveLast()
         {
+            // if the array is empty, throw the exception
+            if (Count ==0) throw new InvalidOperationException();
+            // otherwise, remove the first node
             Remove(Tail.Previous);
         }
-
     }
 }
